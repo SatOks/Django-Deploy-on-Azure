@@ -1,7 +1,7 @@
 import os
 from .settings import *
 from .settings import BASE_DIR
-
+from .settings import STATIC_URL, STATICFILES_DIRS
 
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
@@ -19,6 +19,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+STATIC_URL = STATIC_URL
+STATICFILES_DIRS = STATICFILES_DIRS
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
