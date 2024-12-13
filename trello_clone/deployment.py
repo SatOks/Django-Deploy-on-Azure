@@ -42,5 +42,10 @@ DATABASES = {
         'HOST': parameters['host'],
         'USER': parameters['user'],
         'PASSWORD': parameters['password'],
+        'PORT': '5432',  
+        'OPTIONS': {
+            'sslmode': 'require',  
+            'connect_timeout': 30,
+        }
     }
 }
