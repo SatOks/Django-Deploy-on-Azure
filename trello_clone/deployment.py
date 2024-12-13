@@ -22,9 +22,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-STATIC_URL = '/static/'
-STATIC_ROOT = str(BASE_DIR / 'staticfiles')
-STATICFILES_DIRS = [str(BASE_DIR / 'static')]  # Points to your existing static folder
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS =[
+    BASE_DIR / "static"
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 os.makedirs(BASE_DIR / 'static', exist_ok=True)
