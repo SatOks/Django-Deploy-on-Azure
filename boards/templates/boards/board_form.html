@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Board{% else %}New Board{% endif %}{% endblock %}
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Edit Board{% else %}New Board{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+        <a href="{% url 'board_list' %}">Cancel</a>
+    </form>
+{% endblock %}

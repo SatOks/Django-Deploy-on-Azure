@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/boards.css' %}">
+{% endblock %}
+
+{% block title %}{{ board.title }}{% endblock %}
+
+{% block content %}
+    <div class="board-title-container">
+        <h1>{{ board.title }}</h1>
+        <p>{{ board.description }}</p>
+    </div>
+
+    {% if board.owner == user %}
+        <details>
+            <summary>Board Options</summary>
+            <div>
+                <h4>Update Board Details</h4>
+                <form method="post" action="{% url 'board_update' board.id %}">
+                    {% csrf_token %}
+                    <p>
+                        <label>Title:
+                            <input type="text" name="title" value="{{ board.title }}" required>
+                        </label>
+                    </p>
+                    <p>
+                        <label>Description:
+                            <textarea name="description" rows="3">{{ board.description }}</textarea>
+                        </label>
+                    </p>
+                    <button type="submit">Update Board</button>
+                </form>
+
+                <h4>Remove Member</h4>
+                <form method="post" action="{% url 'remove_member' board.id 0 %}">
+                    {% csrf_token %}
+                    <select name="user_id" required>
+                        <option value="">Select member to remove</option>
+                        {% for member in members %}
+                            {% if member.role != 'OWNER' %}
+                                <option value="{{ member.user.id }}">{{ member.user.username }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Remove Selected Member</button>
+                </form>
+
+                <h4>Delete Board</h4>
+                <form method="post" action="{% url 'board_delete' board.id %}">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Are you sure? This will permanently delete the board and all its tasks.')">Delete Board</button>
+                </form>
+            </div>
+        </details>
+    {% endif %}
+    <!-- Members List -->
+    <div class="workspace-members">
+        <h3>Workspace Members</h3>
+        <ul>
+        {% for member in members %}
+            <li>
+                {{ member.user.username }} 
+                {% if member.role == 'OWNER' %}
+                    (Owner)
+                {% else %}
+                    (Member)
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    
+        {% if board.owner == user %}
+            <div class="add-member-form">
+                <form method="post" action="{% url 'add_member' board.id %}">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Enter username to add">
+                    <button type="submit">Add Member</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="tasks">
+        <div class="todo">
+            <h2>To Do</h2>
+            <a href="{% url 'task_create' board.id %}?status=TODO">Add Task</a>
+            {% for task in tasks %}
+                {% if task.status == 'TODO' %}
+                    <div class="task">
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description }}</p>
+                        <div class="task-actions">
+                            <a href="{% url 'task_update' task.id %}" class="btn-edit">Edit</a>
+                            <form method="post" action="{% url 'delete_task' task.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+        <div class="progress">
+            <h2>In Progress</h2>
+            <a href="{% url 'task_create' board.id %}?status=PROGRESS">Add Task</a>
+            {% for task in tasks %}
+                {% if task.status == 'PROGRESS' %}
+                    <div class="task">
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description }}</p>
+                        <div class="task-actions">
+                            <a href="{% url 'task_update' task.id %}" class="btn-edit">Edit</a>
+                            <form method="post" action="{% url 'delete_task' task.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+        <div class="done">
+            <h2>Done</h2>
+            <a href="{% url 'task_create' board.id %}?status=DONE">Add Task</a>
+            {% for task in tasks %}
+                {% if task.status == 'DONE' %}
+                    <div class="task">
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description }}</p>
+                        <div class="task-actions">
+                            <a href="{% url 'task_update' task.id %}" class="btn-edit">Edit</a>
+                            <form method="post" action="{% url 'delete_task' task.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
