@@ -41,21 +41,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'trelloclone-database',
         'HOST': 'trelloclone-server.postgres.database.azure.com',
-        'USER': 'jwesthypnb',
+        'USER': 'jwesthypnb@trelloclone-server',  # Add server suffix to username
         'PASSWORD': 'w9w9$ykq56nnkSlb',
         'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require',
-            'connect_timeout': 30,
-            # Force IPv4
-            'host_addr': None,  # This disables IPv6
-        }
     }
 }
-
-# Print connection info (remove in production)
-print(f"Database connection params:")
-print(f"HOST: {DATABASES['default']['HOST']}")
-print(f"NAME: {DATABASES['default']['NAME']}")
-print(f"USER: {DATABASES['default']['USER']}")
-print(f"PORT: {DATABASES['default']['PORT']}")
