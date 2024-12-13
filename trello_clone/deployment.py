@@ -1,7 +1,10 @@
 import os
+from pathlib import Path
 from .settings import *
-from .settings import BASE_DIR
-from .settings import STATIC_URL, STATICFILES_DIRS
+# from .settings import BASE_DIR
+# from .settings import STATIC_URL, STATICFILES_DIRS
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
@@ -19,15 +22,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-STATIC_URL = STATIC_URL
-STATICFILES_DIRS = STATICFILES_DIRS
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-os.makedirs(os.path.join(BASE_DIR, 'static'), exist_ok=True)
-os.makedirs(STATIC_ROOT, exist_ok=True)
+STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR / 'staticfiles')
+STATICFILES_DIRS = [str(BASE_DIR / 'static')]  # Points to your existing static folder
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+os.makedirs(BASE_DIR / 'static', exist_ok=True)
+os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 
 connection_string = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
-parameters = {pair.split('='): pair.split('=')[1] for pair in connection_string.split(' ')}
+parameters = {pair.split('=')[0]: pair.split('=')[1] for pair in connection_string.split(' ')}
 
 DATABASES = {
     'default': {
