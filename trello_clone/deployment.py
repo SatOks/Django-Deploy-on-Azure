@@ -35,16 +35,17 @@ os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 connection_string = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
 parameters = {pair.split('=')[0]: pair.split('=')[1] for pair in connection_string.split(' ')}
 
+# deployment.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parameters['dbname'],
-        'HOST': parameters['host'],
-        'USER': parameters['user'],
-        'PASSWORD': parameters['password'],
-        'PORT': '5432',  
+        'NAME': 'trelloclone-database',
+        'HOST': 'trelloclone-server.postgres.database.azure.com',
+        'USER': 'jwesthypnb',
+        'PASSWORD': 'w9w9$ykq56nnkSlb',
+        'PORT': '5432',
         'OPTIONS': {
-            'sslmode': 'require',  
+            'sslmode': 'require',
             'connect_timeout': 30,
         }
     }
