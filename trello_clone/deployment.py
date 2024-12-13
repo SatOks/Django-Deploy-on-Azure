@@ -6,6 +6,9 @@ from .settings import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+print("Using deployment settings")
+print(f"Current directory: {BASE_DIR}")
+
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://'+ os.environ['WEBSITE_HOSTNAME']]
@@ -32,37 +35,27 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 os.makedirs(BASE_DIR / 'static', exist_ok=True)
 os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 
-# Parse connection string properly
-connection_string = os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING', '')
-if connection_string:
-    parameters = {pair.split('=')[0]: pair.split('=')[1] for pair in connection_string.split(' ')}
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': parameters['dbname'],
-            'HOST': parameters['host'],
-            'USER': parameters['user'],
-            'PASSWORD': parameters['password'],
-            'PORT': parameters.get('port', '5432'),
-            'OPTIONS': {
-                'sslmode': 'require',
-                'sslcert': None,
-            }
+# Direct database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'trelloclone-database',
+        'HOST': 'trelloclone-server.postgres.database.azure.com',
+        'USER': 'jwesthypnb',
+        'PASSWORD': 'w9w9$ykq56nnkSlb',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+            'connect_timeout': 30,
+            # Force IPv4
+            'host_addr': None,  # This disables IPv6
         }
     }
-else:
-    # Fallback to direct configuration
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DBNAME', 'trelloclone-database'),
-            'HOST': os.environ.get('DBHOST', 'trelloclone-server.postgres.database.azure.com'),
-            'USER': os.environ.get('DBUSER', 'jwesthypnb'),
-            'PASSWORD': os.environ.get('DBPASS', 'w9w9$ykq56nnkSlb'),
-            'PORT': os.environ.get('DBPORT', '5432'),
-            'OPTIONS': {
-                'sslmode': 'require',
-                'sslcert': None,
-            }
-        }
-    }
+}
+
+# Print connection info (remove in production)
+print(f"Database connection params:")
+print(f"HOST: {DATABASES['default']['HOST']}")
+print(f"NAME: {DATABASES['default']['NAME']}")
+print(f"USER: {DATABASES['default']['USER']}")
+print(f"PORT: {DATABASES['default']['PORT']}")
