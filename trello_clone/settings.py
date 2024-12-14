@@ -80,11 +80,14 @@ WSGI_APPLICATION = 'trello_clone.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'trello_clone',
-        'USER': 'postgres',
-        'PASSWORD': '232432532Sql',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'postgres',  # Database name
+        'USER': 'sagan',            # Username
+        'PASSWORD': '232432532Sql',  # Password
+        'HOST': 'trellodb.postgres.database.azure.com',  # Hostname
+        'PORT': '5432',                  # Port
+        'OPTIONS': {
+            'sslmode': 'require',        # SSL mode
+        },
     }
 }
 

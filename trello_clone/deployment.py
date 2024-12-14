@@ -38,9 +38,13 @@ parameters = {pair.split('=')[0]: pair.split('=')[1] for pair in connection_stri
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parameters['dbname'],
-        'HOST': parameters['host'],
-        'USER': parameters['user'],
-        'PASSWORD': parameters['password'],
+        'NAME': 'postgres',  
+        'USER': 'sagan',            
+        'PASSWORD': '232432532Sql',  
+        'HOST': 'trellodb.postgres.database.azure.com',  
+        'PORT': '5432',                  
+        'OPTIONS': {
+            'sslmode': 'require',        
+        },
     }
 }
