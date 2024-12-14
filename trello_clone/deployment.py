@@ -6,9 +6,6 @@ from .settings import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-print("Using deployment settings")
-print(f"Current directory: {BASE_DIR}")
-
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://'+ os.environ['WEBSITE_HOSTNAME']]
@@ -35,14 +32,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 os.makedirs(BASE_DIR / 'static', exist_ok=True)
 os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 
-# Direct database configuration
+connection_string = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+parameters = {pair.split('=')[0]: pair.split('=')[1] for pair in connection_string.split(' ')}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'trelloclone-database',
-        'HOST': 'trelloclone-server.postgres.database.azure.com',
-        'USER': 'jwesthypnb@trelloclone-server',  # Add server suffix to username
-        'PASSWORD': 'w9w9$ykq56nnkSlb',
-        'PORT': '5432',
+        'NAME': parameters['dbname'],
+        'HOST': parameters['host'],
+        'USER': parameters['user'],
+        'PASSWORD': parameters['password'],
     }
 }
